@@ -1,0 +1,43 @@
+ 
+                {% if bestelmenu.huidigeBestelling.bestelling is not empty  %}
+        <h1>Uw bestelling</h1>
+
+        <table border="1" collapse="collapse">
+            <thead>
+                <tr><td>Item</td><td>Beleg</td><td>prijs</td></tr>
+            </thead>
+                 {% for key,bestelregel in bestelmenu.huidigeBestelling.bestelling %}
+            <tr>
+                    {% for key, brood in bestelregel %}
+                    {% if 'prijs' not in key %}
+                <td><!-- broodtype echoen -->
+                    {{key}}
+                </td>
+                <td><!-- beleg echoen -->
+                     {% for beleg in brood %}
+                    {{beleg}},
+                    {% endfor %}
+                </td>
+                    {% endif %}
+                    {% endfor %}
+                <!-- prijs echoen -->
+                {% for key, prijs in bestelregel %}
+                    {% if key=='prijs' %}
+                <td> &euro; {{prijs/100}}</td>
+                {% endif %}
+                {% endfor %}
+                {% if bestelmenu.huidigeBestelling.reedsBesteld is empty  %}
+                <td><a href="bestelmenucontroller.php?action=delete&id={{key}}">X</a></td>
+                {% endif %}
+                {% endfor %}
+            {% endif %}
+            </tr>
+        </table>
+      <a href="usercontroller.php?action=loguit"><button>Loguit</button></a>
+        {% if error is defined %}
+            {% if error =="GeenBrood"%}
+        <p>U heeft geen brood gekozen</p>
+            {% elseif error == "GeenBeleg" %}
+        <p>U heeft geen beleg gekozen</p>
+            {% endif %}
+        {% endif %}

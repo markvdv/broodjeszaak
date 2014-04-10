@@ -1,0 +1,14 @@
+<h1>AdminLogin</h1>        
+<form action="admincontroller.php?action=login" method="POST">
+            <input name="naam" type="text" placeholder="naam">
+            <input name="pw" type="text" placeholder="password"> 
+            <input name="submit" type="submit" value="login"> 
+        </form>
+
+{% if error is defined %}
+{% if error=='UserNotFound' %}
+<p>Admin name not found in our system</p>
+{% elseif error=='IncorrectPassword' %}
+<p>Password is incorrect</p>
+{% endif %}
+{% endif %}

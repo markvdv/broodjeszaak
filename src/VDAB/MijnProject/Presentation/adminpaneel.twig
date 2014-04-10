@@ -1,0 +1,68 @@
+{# empty Twig template #}
+<h1>Te Leveren Bestellingen</h1>
+{% for bestelling  in bestellingen %}
+<table border='1'>
+    <thead>
+        <tr>
+            <td>
+                Bestellingsnr {{bestelling.id}}
+                <br>
+                username: 
+            {% for user in users %}
+            {% if user.id==bestelling.userid %}
+            {{user.naam}}
+            {% endif %}
+            {% endfor %}
+                <br>
+                email: {{user.email}}
+                {% for user in users %}
+            {% if user.id==bestelling.userid %}
+            {{user.email}}
+            {% endif %}
+            {% endfor %}
+                <br>
+                tijdstip: {{bestelling.tijdstip}}
+            </td>
+            <td>
+                prijs
+            </td>
+            <td><a href="admincontroller.php?action=verwijderbestelling&id={{bestelling.id}}">X</a></td>
+        </tr>
+    </thead>
+    {% for bestelregel in bestelregels %}
+    <tr >
+            {% if bestelregel.oBestelling==bestelling.id %}
+        <td>
+            {% for brood in broden %}
+
+            {% if brood.oBestelregel.id==bestelregel.id %}
+            {{brood.type}}
+            {% endif %}
+            {% endfor %}
+            {% for belegitem in beleg %}
+            {% if belegitem.oBestelregel.id==bestelregel.id %}
+            {{belegitem.type}}
+             
+            {% endif %}
+            
+            {% endfor %}
+        </td>
+             <td colspan="2">
+            &euro; {{bestelregel.prijs/100}}
+        </td>
+            {% endif %}
+
+      
+    </tr>
+{% endfor %}
+    
+{% for key, prijs  in totaalprijs %}
+   {% if key== bestelling.id %}
+    <tr><td class='bold'>totaalprijs</td><td colspan="2">
+            &euro; {{prijs/100}}
+        </td></tr>
+    {% endif %}
+    {% endfor %}
+</table>
+{% endfor %}
+<a href="usercontroller.php?action=loguit"><button>loguit</button></a>

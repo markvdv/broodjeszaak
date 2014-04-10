@@ -1,0 +1,22 @@
+
+<form action="usercontroller.php?action=login" method="POST">
+    <input name="email" type="email" placeholder="email">
+    <input name="password" type="password" placeholder="password"> 
+    <input name="submit" type="submit" value="login"> 
+</form>
+
+<a href="usercontroller.php?action=nieuwWachtwoordAanvraag"><button>wachtwoord vergeten</button></a>
+<a href="usercontroller.php?action=nieuweUser"><button>registreer</button></a>
+<a href="usercontroller.php?action=admin"><button>Admin</button></a>
+        {% if error is defined %}
+            {% if error =="UserNotFound"%}
+                <p>Email is not registered</p>
+            {% elseif error == "IncorrectPassword" %}
+                <p>Password is wrong</p>
+            {% elseif error == "NoEmailGiven" %}
+                <p>no email given up</p>
+            {% endif %}
+        {% else %} 
+            <p>Gelieve in te loggen</p> 
+        {% endif %}
+

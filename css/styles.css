@@ -1,0 +1,84 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 17-mrt-2014, 9:08:36
+    Author     : mark.vanderveken
+*/
+
+/* RESET */
+html, body, div, h1, h2, h3, h4, h5, h6, ul, ol, dl, li, dt, dd, p, blockquote, pre, form, fieldset, table, th, td { margin: 0; padding: 0; } 
+body{font-size:100%;}
+ul{list-style:none;}
+/* Einde RESET */
+body{
+    font-family: Arial,Helvetica,sans-serif;
+    background-color:whitesmoke;
+}
+.bold{
+    font-weight:bold;
+}
+header,footer{
+    background-color:grey;
+    color:whitesmoke;
+    text-align: center;
+}
+
+header{
+    margin-bottom:1em;
+}
+footer{
+    margin-top:1em;
+   padding:1em;
+}
+.bar{
+    width:140%;
+    margin-left:-20%;
+}
+form{
+    margin-top:2em;
+    position:relative;
+}
+form *{
+    width:32.5%;
+}
+form input[type=submit]{
+    width:33%;
+}
+button {
+    width:32.9%;
+}
+.voegtoe{
+    height:5em;
+    margin-top:-50em;
+}
+table{
+    width:100%;
+    border-collapse: collapse;
+}
+td{
+    width:100%;
+    padding:10px;
+}
+thead td{
+    background: grey;
+    color:whitesmoke;
+    font-weight:bold;
+    text-align: justify;
+}
+.container{
+    width:80%;
+    margin-left:10%;
+}
+.bestelmenu{
+    background-color:grey;
+}
+.bestelmenu *{
+    float:left;
+}
+.bestelmenu input[type=submit]{
+    margin-top:0.15em;
+    height:6.2em;
+}

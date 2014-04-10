@@ -1,0 +1,25 @@
+{# empty Twig template #}
+<!doctype html>
+<html>
+    <head>
+        <title>wachtwoord vergeten</title>
+    </head>
+    <body>
+        <div clas="container">
+        <form action="usercontroller.php?action=nieuwWachtwoord" method="POST">
+            <input name="email" type="email" placeholder="email">
+            <input name="submit" type="submit" value="verzend"> 
+        </form>
+        <a href="usercontroller.php"><button>go back</button></a>
+         {% if error is defined %}
+          
+            {% if error == "NoEmailGiven" %}
+        <p>no email given up</p>
+          
+            {% elseif error == "UserNotFound" %}
+        <p>You aren't registered in this database</p>
+            {% endif %}
+        {% endif %}
+        </div>
+    </body>
+</html>

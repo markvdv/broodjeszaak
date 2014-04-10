@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>registreer</title>
+    </head>
+    <body>
+        <h1>registratie</h1>
+                <form action="usercontroller.php?action=registreerUser" method="POST">
+            <input name="email" type="email" placeholder="email">
+            <input name="naam" type="text" placeholder="naam"> 
+            <input name="submit" type="submit" value="registreer"> 
+        </form>
+       {% if error is defined %}
+            {% if error =="UserAlreadyExists"%}
+        <p>Email is already registered</p>
+            {% endif %}
+        {% endif %}
+        <a href="usercontroller.php"><button>Go back</button></a>
+    </body>
+</html>
