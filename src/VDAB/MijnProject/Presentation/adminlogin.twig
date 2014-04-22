@@ -1,3 +1,8 @@
+{%extends "base.twig"%}
+{%block title %}
+adminlogin
+{%endblock%}
+{%block content%}
 <h1>AdminLogin</h1>        
 <form action="admincontroller.php?action=login" method="POST">
             <input name="naam" type="text" placeholder="naam">
@@ -12,3 +17,4 @@
 <p>Password is incorrect</p>
 {% endif %}
 {% endif %}
+{%endblock%}

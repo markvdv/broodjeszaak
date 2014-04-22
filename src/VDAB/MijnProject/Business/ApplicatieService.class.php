@@ -25,7 +25,6 @@ class ApplicatieService {
         $bestelmenu = new \stdClass();
         $bestelmenu->broden = BroodDAO::getByBestelRegelId(null);
         $bestelmenu->beleg = BelegDAO::getByBestelRegelId(null);
-        $bestelmenu->huidigeBestelling = new huidigeBestelling($userid);
         return $bestelmenu;
     }
 

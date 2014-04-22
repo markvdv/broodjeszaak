@@ -30,16 +30,12 @@ if (isset($_GET['action'])) {
                 $_SESSION['adminloggedin'] = true;
             } catch (UserNotFoundException $UNFe) {
                 $error = 'UserNotFound';
-                $view = $twig->render("header.twig");
-                $view .= $twig->render("adminlogin.twig", array("error" => $error));
-                $view .= $twig->render("footer.twig");
+                $view = $twig->render("adminlogin.twig", array("error" => $error));
                 echo $view;
                 exit(0);
             } catch (IncorrectPasswordException $IPe) {
                 $error = 'IncorrectPassword';
-                $view = $twig->render("header.twig");
-                $view .= $twig->render("adminlogin.twig", array("error" => $error));
-                $view .= $twig->render("footer.twig");
+                $view = $twig->render("adminlogin.twig", array("error" => $error));
                 echo $view;
                 exit(0);
             }
@@ -51,9 +47,7 @@ if (isset($_GET['action'])) {
 }
 
 if (!isset($_SESSION['adminloggedin']) || $_SESSION['adminloggedin'] != true) {
-    $view = $twig->render("header.twig");
-    $view .= $twig->render('adminlogin.twig');
-    $view .= $twig->render("footer.twig");
+    $view = $twig->render('adminlogin.twig');
     echo $view;
     exit(0);
 }

@@ -1,19 +1,70 @@
 
+{%extends "base.twig"%}
+{%block title%}
+Maak uw bestelling
+{%endblock %}
+{% block content %}
 
-        <form class="bestelmenu" action="bestelmenucontroller.php?action=voegtoe" method="POST">
-            <select name="brood" size="5" required>
+{% if tijdstip < 10 %}
+<!-- eigenlijke bestelmenu -->
+<form class="bestelmenu" action="usercontroller.php?action=voegtoe" method="POST">
+    <select name="brood" size="5" required>
                 {% for brood in bestelmenu.broden %}
-                    <option value="{{ brood.type }}">{{ brood.type }} &euro;{{ brood.prijs/100 }}
-                    </option>
+        <option value="{{ brood.type }}">{{ brood.type }} &euro;{{ brood.prijs/100 }}
+        </option>
                 {% endfor %}
-            </select>  
-            <select name="beleg[]" size="5" multiple="multiple" >
+    </select>  
+    <select name="beleg[]" size="5" multiple="multiple" >
                 {% for beleg in bestelmenu.beleg %}
-                    <option value="{{ beleg.type }}">{{ beleg.type }} &euro;{{ beleg.prijs / 100}} 
-                    </option>
+        <option value="{{ beleg.type }}">{{ beleg.type }} &euro;{{ beleg.prijs / 100}} 
+        </option>
                 {% endfor %}
-            </select>  
-            <input class="voegtoe" name="submit" type="submit" value="voeg toe"> 
-        </form>
-        <a href="bestelmenucontroller.php?action=bestel"><button>rond bestelling af</button></a>
+    </select>  
+    <input class="voegtoe" name="submit" type="submit" value="voeg toe"> 
+</form>
+<a href="usercontroller.php?action=bestel"><button>rond bestelling af</button></a>
+        {%else%}
+<h1>Winkel Dicht</h1>   
+<p>Het is na 10 uur. Er worden geen bestellingen meer opgenomen</p>
+{% endif %}
+<!-- bestelling -->
+<h1>Uw bestelling</h1>
 
+{% if winkelmand is defined %}
+<table border="1" collapse="collapse">
+    <thead>
+        <tr><td>Item</td><td>Beleg</td><td>prijs</td></tr>
+    </thead>
+    <tr>
+                    {% for key,broden in winkelmand.bestelregels %}
+        <td><!-- broodtype echoen -->
+            {% for brood in winkelmand.bestelregels.key %}
+                    
+        </td>
+        <td><!-- beleg echoen -->
+                     {% for beleg in brood %}
+                    {{beleg}},
+                    {% endfor %}
+        </td>
+                    {% endfor %}
+        <!-- prijs echoen -->
+                {% for key, prijs in bestelregel %}
+                    {% if key=='prijs' %}
+        <td> &euro; {{prijs/100}}</td>
+                {% endif %}
+                {% endfor %}
+                {% if bestelmenu.huidigeBestelling.reedsBesteld is empty  %}
+        <td><a href="bestelmenucontroller.php?action=delete&id={{key}}">X</a></td>
+                {% endif %}
+                    {% endfor %}
+        {%endif%}
+    </tr>
+</table>
+        {% if error is defined %}
+            {% if error =="GeenBrood"%}
+<p>U heeft geen brood gekozen</p>
+            {% elseif error == "GeenBeleg" %}
+<p>U heeft geen beleg gekozen</p>
+            {% endif %}
+        {% endif %}
+{%endblock%}

@@ -1,5 +1,5 @@
- 
-                {% if bestelmenu.huidigeBestelling.bestelling is not empty  %}
+            
+ {% if bestelmenu.huidigeBestelling.bestelling is not empty  %}
         <h1>Uw bestelling</h1>
 
         <table border="1" collapse="collapse">
@@ -33,7 +33,6 @@
             {% endif %}
             </tr>
         </table>
-      <a href="usercontroller.php?action=loguit"><button>Loguit</button></a>
         {% if error is defined %}
             {% if error =="GeenBrood"%}
         <p>U heeft geen brood gekozen</p>

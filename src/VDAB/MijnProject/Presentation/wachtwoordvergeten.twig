@@ -1,12 +1,10 @@
-{# empty Twig template #}
-<!doctype html>
-<html>
-    <head>
-        <title>wachtwoord vergeten</title>
-    </head>
-    <body>
-        <div clas="container">
-        <form action="usercontroller.php?action=nieuwWachtwoord" method="POST">
+{% extends "base.twig" %}
+{%block title %}
+wachtwoord vergeten
+{% endblock%}
+{% block content %}
+<h1>Wachtwoord Vergeten</h1>     
+<form action="usercontroller.php?action=nieuwWachtwoord" method="POST">
             <input name="email" type="email" placeholder="email">
             <input name="submit" type="submit" value="verzend"> 
         </form>
@@ -20,6 +18,4 @@
         <p>You aren't registered in this database</p>
             {% endif %}
         {% endif %}
-        </div>
-    </body>
-</html>
+        {% endblock %}

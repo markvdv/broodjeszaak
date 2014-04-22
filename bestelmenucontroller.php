@@ -2,28 +2,32 @@
 
 session_start();
 
+// <editor-fold defaultstate="collapsed" desc="used classes">
 use VDAB\MijnProject\Business\ApplicatieService;
 use VDAB\MijnProject\Exceptions\NoFillingGivenException;
 use VDAB\MijnProject\Exceptions\NoBreadGivenException;
 use VDAB\MijnProject\Entitities\Bestelling;
-use VDAB\MijnProject\Service\BestellingService;
+use VDAB\MijnProject\Service\BestellingService; // </editor-fold>
+
+/// <editor-fold defaultstate="collapsed" desc="doctrine autoloader">
 //Doctrine AutoLoader
+
 use Doctrine\Common\ClassLoader;
 
 require_once ('Doctrine/Common/ClassLoader.php');
 $classLoader = new ClassLoader("VDAB", "src");
 $classLoader->setFileExtension(".class.php");
-$classLoader->register();
+$classLoader->register(); // </editor-fold>
 
+
+// <editor-fold defaultstate="collapsed" desc="Twig templating engine">
 //TWIG
 require_once("libraries/Twig/Autoloader.php");
 Twig_Autoloader::register();
 $loader = new Twig_Loader_Filesystem("src/VDAB/MijnProject/presentation");
-$twig = new Twig_Environment($loader,array("debug"=>true));
-$twig->addExtension(new Twig_Extension_Debug);
+$twig = new Twig_Environment($loader, array("debug" => true));
+$twig->addExtension(new Twig_Extension_Debug); // </editor-fold>
 
-
-$bestellingAfgerond=false;
 if (isset($_GET['error'])) {
     $error = $_GET['error'];
 }
@@ -31,6 +35,7 @@ $usernaam = $_SESSION['usernaam'];
 if (!isset($_SESSION['bestelmenu'])) {
     $bestelmenu = ApplicatieService:: prepGui($_SESSION['userid']);
     $_SESSION['bestelmenu'] = serialize($bestelmenu);
+    
 }
 
 $bestelmenu = unserialize($_SESSION['bestelmenu']);
@@ -67,10 +72,10 @@ if ((isset($_GET['action']))) {
     }
 }
 
-$uur=11;
+$uur=9;
 //$uur = date('h');
 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
-    if ($uur >= 10) {
+  /*  if ($uur >= 10) {
         if ($bestelmenu->huidigeBestelling->reedsBesteld == true) {
             $view = $twig->render("huidigebestelling.twig", array('bestelmenu' => $bestelmenu));
             $view .= $twig->render("footer.twig");
@@ -92,8 +97,10 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
         $view .= $twig->render("huidigebestelling.twig", array('bestelmenu' => $bestelmenu));
         $view .= $twig->render("footer.twig");
         echo $view;
-    }
 }
+    }*/
+    $view=$twig->render("index.twig");
+    echo $view;
 }
 
 

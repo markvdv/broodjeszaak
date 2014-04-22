@@ -1,45 +1,34 @@
 <?php
 namespace VDAB\MijnProject\Classlib;
-
+use \VDAB\MijnProject\Exceptions\NoBreadGivenException;
+use \VDAB\MijnProject\Exceptions\NoFillingGivenException;
 class huidigeBestelling {
 
     private $userid;
-    public $bestelling;
-    public $reedsBesteld;
+    private $bestelregels;
 
     function __construct($userid,$reedsBesteld=false) {
         $this->userid = $userid;
-        $this->reedsBesteld = $reedsBesteld;
-        $this->bestelling = array();
+        $this->bestelregels = array();
     }
-    public function setReedsBesteld($reedsBesteld) {
-        $this->reedsBesteld=$reedsBesteld;
+    public function getBestelregels(){
+        return $this->bestelregels;
     }
-    public function verwijderBestelregel($id,$bestelmenu) {
-        foreach($bestelmenu->huidigeBestelling->bestelling as $key =>$value){
+    public function verwijderBestelregel($bestelregelid) {
+        unset ($this->bestelregels[$bestelregelid]);
+       /* foreach($this->bestelling as $key =>$value){
             if($id==$key){
                 unset ($bestelmenu->huidigeBestelling->bestelling[$key]);
             }
-        }
-        return $bestelmenu;
-    }
-    public function veranderHuidigeBestelling($brood, $arrBeleg, $bestelmenu) {
-
-        if ($brood == NULL) {
-            throw new NoBreadGivenException;
-        }
-        if ($arrBeleg == NULL) {
-            throw new NoFillingGivenException;
-        }
-        $totaalprijs = huidigeBestelling::berekenPrijs($brood, $arrBeleg, $bestelmenu);
-        $bestelmenu->huidigeBestelling->bestelling = huidigeBestelling::voegRegelBij($brood, $arrBeleg, $totaalprijs);
-        return $bestelmenu;
+        }*/
     }
 
-    public static function berekenPrijs($brood, $arrBeleg, $bestelmenu) {
+    public function berekenPrijs($brood, $arrBeleg) {
         $totaalprijs = 0;
-        foreach ($bestelmenu->broden as $oBrood) {
-            if ($oBrood->getType() == $brood) {
+        foreach ($this->bestelregels as $bestelregel) {
+        
+        }
+         /*   if ($oBrood->getType() == $brood) {
                 $totaalprijs+=$oBrood->getPrijs();
             }
         }
@@ -49,19 +38,24 @@ class huidigeBestelling {
                     $totaalprijs+=$oBeleg->getPrijs();
                 }
             }
-        }
+        }*/
  
         return $totaalprijs;
     }
 
-    public function voegRegelBij($brood, $arrBeleg, $totaalprijs) {
+    public function voegBroodjeToe($brood, $arrBeleg) {
+        if ($brood==""){
+            throw new NoBreadGivenException;
+        }
+        if($arrBeleg==""){
+            throw new NoFillingGivenException;
+        }
         $key=0;
-       while(array_key_exists($key,$this->bestelling)) {
+       while(array_key_exists($key,$this->bestelregels)) {
             $key+=1;
         }
-        $this->bestelling[$key][$brood] = $arrBeleg;
-        $this->bestelling[$key]['prijs'] = $totaalprijs;
-        return $this->bestelling;
+        $this->bestelregels[$key][$brood] = $arrBeleg;
+        return $this->bestelregels;
     }
     public function getUserId() {
         return $this->userid;

@@ -1,4 +1,10 @@
-
+{% extends "base.twig"%}
+{% block title%}
+Log in
+{%endblock%}
+{%block content%}
+{% if  loggedin ==false and registratie==false%}
+<h1>Log in</h1>
 <form action="usercontroller.php?action=login" method="POST">
     <input name="email" type="email" placeholder="email">
     <input name="password" type="password" placeholder="password"> 
@@ -10,13 +16,16 @@
 <a href="usercontroller.php?action=admin"><button>Admin</button></a>
         {% if error is defined %}
             {% if error =="UserNotFound"%}
-                <p>Email is not registered</p>
+<p>Email is not registered</p>
             {% elseif error == "IncorrectPassword" %}
-                <p>Password is wrong</p>
+<p>Password is wrong</p>
             {% elseif error == "NoEmailGiven" %}
-                <p>no email given up</p>
+<p>no email given up</p>
+            {% elseif error == "NoPasswordGiven" %}
+<p>no password given up</p>
             {% endif %}
         {% else %} 
-            <p>Gelieve in te loggen</p> 
+<p>Gelieve in te loggen</p> 
         {% endif %}
-
+{% endif%}
+{%endblock%}

@@ -2,27 +2,44 @@
 
 session_start();
 
+// <editor-fold defaultstate="collapsed" desc="used classes">
 use VDAB\MijnProject\Business\ApplicatieService;
 use VDAB\MijnProject\Business\UserService;
+use VDAB\MijnProject\Classlib\huidigeBestelling;
 use VDAB\MijnProject\Exceptions\UserNotFoundException;
 use VDAB\MijnProject\Exceptions\IncorrectPasswordException;
 use VDAB\MijnProject\Exceptions\NoEmailGivenException;
-use VDAB\MijnProject\Exceptions\UserAlreadyExistsException;
-//doctrine
+use VDAB\MijnProject\Exceptions\NoPasswordGivenException;
+use VDAB\MijnProject\Exceptions\UserAlreadyExistsException; 
+//// </editor-fold>
+//doctrine// <editor-fold defaultstate="collapsed" desc="doctrine autoloader">
 use Doctrine\Common\ClassLoader;
 
 require_once ('Doctrine/Common/ClassLoader.php');
 $classLoader = new ClassLoader("VDAB", "src");
 $classLoader->setFileExtension(".class.php");
-$classLoader->register();
-
-//TWIG
+$classLoader->register(); // </editor-fold>
+//TWIG// <editor-fold defaultstate="collapsed" desc="TWIG Templating engine">
 require_once("libraries/Twig/Autoloader.php");
 Twig_Autoloader::register();
 $loader = new Twig_Loader_Filesystem("src/VDAB/MijnProject/presentation");
 $twig = new Twig_Environment($loader, array("debug" => true));
-$twig->addExtension(new Twig_Extension_Debug);
+$twig->addExtension(new Twig_Extension_Debug); // </editor-fold>
 
+if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true&&(!isset($_GET['action']))) {
+    $username = $_SESSION['username'];
+    $userid = $_SESSION['userid'];
+    $bestelmenu = ApplicatieService::prepBestelMenu($userid);
+    $_SESSION['bestelmenu']=serialize($bestelmenu);
+    $winkelmand=new huidigeBestelling($userid);
+     $_SESSION['winkelmand']= serialize($winkelmand);
+    $view = $twig->render("bestelmenu.twig", array("bestelmenu" => $bestelmenu));
+    echo $view;
+    exit(0);
+} 
+
+
+// <editor-fold defaultstate="collapsed" desc="$_GET['action'] handler">
 if (isset($_GET['action'])) {
     switch ($_GET['action']) {
         case 'login':
@@ -30,40 +47,31 @@ if (isset($_GET['action'])) {
                 $user = UserService::loginUser($_POST['email'], $_POST['password']);
                 $_SESSION['loggedin'] = true;
                 $_SESSION['userid'] = $user->getId();
-                $_SESSION['usernaam'] = $user->getNaam();
+                $_SESSION['username'] = $user->getNaam();
+               
                 header('location:usercontroller.php');
                 exit(0);
             } catch (UserNotFoundException $UNFe) {
                 $error = "UserNotFound";
-                  $view = $twig->render("header.twig");
-                $view .= $twig->render("loginformulier.twig", array("error" => $error));
-                $view .= $twig->render("footer.twig");
-                echo $view;
-                exit(0);
             } catch (IncorrectPasswordException $IPe) {
                 $error = "IncorrectPassword";
-                $view = $twig->render("header.twig");
-                $view .= $twig->render("loginformulier.twig", array("error" => $error));
-                $view .= $twig->render("footer.twig");
-                echo $view;
-                exit(0);
+            } catch (NoEmailGivenException $IPe) {
+                $error = "NoEmailGiven";
+            } catch (NoPasswordGivenException $IPe) {
+                $error = "NoPasswordGiven";
             }
             break;
         case 'loguit':
+            $loggedin = false;
             unset($_SESSION['adminloggedin']);
             unset($_SESSION['loggedin']);
-            unset($_SESSION['bestelmenu']);
-            $view = $twig->render("header.twig");
-            $view .= $twig->render("loginformulier.twig");
-            $view .= $twig->render("footer.twig");
-            echo $view;
+            unset($_SESSION['userid']);
+            unset($_SESSION['username']);
+            header('location:usercontroller.php');
             exit(0);
             break;
         case 'nieuweUser';
-            $view = $twig->render("header.twig");
-            $view .= $twig->render("registreerformulier.twig");
-            $view .= $twig->render("footer.twig");
-            echo $view;
+            $view = $twig->render("registreerformulier.twig");
             exit(0);
             break;
         case 'registreerUser':
@@ -71,37 +79,18 @@ if (isset($_GET['action'])) {
                 $user = UserService:: registreerUser($_POST['email'], $_POST['naam']);
             } catch (UserAlreadyExistsException $UAEe) {
                 $error = "UserAlreadyExists";
-                $view = $twig->render("header.twig");
-                $view .= $twig->render("registreerformulier.twig", array("error" => $error));
-                $view .= $twig->render("footer.twig");
-                echo $view;
-                exit(0);
             }
             break;
         case "nieuwWachtwoordAanvraag":
-            $view = $twig->render("header.twig");
-            $view .= $twig->render("wachtwoordvergeten.twig");
-            $view .= $twig->render("footer.twig");
-            echo $view;
-            exit(0);
+            $view = $twig->render('wachtwoordvergeten.twig');
             break;
         case "nieuwWachtwoord":
             try {
                 UserService::stuurNieuwWachtwoord($_POST['email']);
             } catch (NoEmailGivenException $NEGe) {
                 $error = "NoEmailGiven";
-                $view = $twig->render("header.twig");
-                $view .= $twig->render("wachtwoordvergeten.twig", array("error" => $error));
-                $view .= $twig->render("footer.twig");
-                echo $view;
-                exit(0);
             } catch (UserNotFoundException $UNFe) {
                 $error = "UserNotFound";
-                $view = $twig->render("header.twig");
-                $view .= $twig->render("wachtwoordvergeten.twig", array("error" => $error));
-                $view .= $twig->render("footer.twig");
-                echo $view;
-                exit(0);
             }
             break;
         case 'admin':
@@ -109,15 +98,40 @@ if (isset($_GET['action'])) {
             header('location:admincontroller.php');
             exit(0);
             break;
+        case 'voegtoe':
+            try {
+                $winkelmand=unserialize($_SESSION['winkelmand']);
+                $winkelmand->voegBroodjeToe($_POST['brood'],$_POST['beleg']);
+                $_SESSION['winkelmand']=serialize($winkelmand);
+                $bestelmenu=unserialize($_SESSION['bestelmenu']);
+                $view= $twig->render("bestelmenu.twig",array("bestelmenu"=>$bestelmenu,"winkelmand"=>$winkelmand));
+            } catch (NoBreadGivenException $NBGe) {
+                header('location:usercontroller.php?error=GeenBrood');
+            } catch (NoFillingGivenException $NBGe) {
+                header('location:usercontroller.php?error=GeenBeleg');
+            }
+            break;
+        case 'bestel':
+            ApplicatieService::rondBestellingAf($bestelmenu);
+            unset($_SESSION['bestelmenu']);
+            header('location:usercontroller.php?action=bestellingafgerond');
+            break;
+        case 'delete':
+            $bestelmenu = $bestelmenu->huidigeBestelling->verwijderBestelregel($_GET['id'], $bestelmenu);
+            $_SESSION['bestelmenu'] = serialize($bestelmenu);
+            break;
+        case 'bestellingafgerond':
+            $bestellingAfgerond=true;
+             $_SESSION['bestelmenu'] = serialize($bestelmenu);
+             break;
     }
+}// </editor-fold>
+else {
+    $view = $twig->render("loginformulier.twig");
 }
 
-if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] != true) {
-    $view = $twig->render("header.twig");
-    $view .= $twig->render("loginformulier.twig");
-    $view .= $twig->render("footer.twig");
-    echo $view;
-} else if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
-    header("location:bestelmenucontroller.php");
-}
+
+
+
+echo $view;
 
