@@ -81,12 +81,11 @@ class ApplicatieService {
     }
 
     public static function rondBestellingAf($winkelmand) {
-        
         $userid = $winkelmand->userid;
-        
-         BestellingDAO::insert($userid);
+        BestellingDAO::insert($userid);
         $bestellingid = BestellingDAO::getLastInsertId();
         foreach ($winkelmand->bestelregels as $bestelregel) {
+           $brood= BroodDAO::getBroodByType($bestelregel->brood);
             $keys = array_keys($bestelregel);
             $result = BestelregelDAO::insert($bestellingid, $bestelregel['prijs']);
             $bestelregelid = BestelregelDAO::getLastInsertId();

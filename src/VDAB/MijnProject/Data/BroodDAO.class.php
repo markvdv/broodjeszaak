@@ -65,6 +65,19 @@ class BroodDAO extends DAO {
         return $brood;
     }
 
+    
+      public function getByType($broodType) {
+        $sql = "SELECT * FROM brood where type=?";
+        $args = func_get_args();
+        $stmt = parent::execPreppedStmt($sql, $args);
+        $result = $stmt->fetch();
+        if ($result) {
+            $brood = Brood::create($result['broodid'], $result['type'], $result['prijs']);
+        }
+        return $brood;
+    }
+    
+    
     /*     * getByUserId
      * bestellingen ophalen op basis van userid, user die besteld heeft
      * 

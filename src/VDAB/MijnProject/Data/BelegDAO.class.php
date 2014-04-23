@@ -60,5 +60,14 @@ class BelegDAO extends DAO {
         }
         return $beleg;
     }
-
+  public static function getByType($belegType) {
+         $sql = "SELECT * FROM beleg where type=?";
+        $args = func_get_args();
+        $stmt = parent::execPreppedStmt($sql, $args);
+        $result = $stmt->fetch();
+        if ($result) {
+            $beleg = Beleg::create($result['belegid'], $result['type'], $result['prijs']);
+        }
+        return $beleg;
+    }
 }
