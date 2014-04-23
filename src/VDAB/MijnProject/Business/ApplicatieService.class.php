@@ -2,11 +2,12 @@
 
 namespace VDAB\MijnProject\Business;
 
-use VDAB\MijnProject\Data\BroodDAO;
-use VDAB\MijnProject\Data\BelegDAO;
-use VDAB\MijnProject\Data\BestelregelDAO;
-use VDAB\MijnProject\Data\BestellingDAO;
+use stdClass;
 use VDAB\MijnProject\Classlib\huidigeBestelling;
+use VDAB\MijnProject\Data\BelegDAO;
+use VDAB\MijnProject\Data\BestellingDAO;
+use VDAB\MijnProject\Data\BestelregelDAO;
+use VDAB\MijnProject\Data\BroodDAO;
 
 class ApplicatieService {
 
@@ -14,22 +15,21 @@ class ApplicatieService {
         $bestelling = BestellingDAO::getByUserId($userid);
         if ($bestelling == true) {
             $bestelmenu = ApplicatieService::haalBestellingOp($userid);
-            $bestelmenu->huidigeBestelling->setReedsBesteld(true);
         } else if ($bestelling == false) {
             $bestelmenu = ApplicatieService::prepBestelMenu($userid);
         }
         return $bestelmenu;
     }
 
-    public static function prepBestelMenu($userid) {
-        $bestelmenu = new \stdClass();
+    public static function prepBestelMenu() {
+        $bestelmenu = new stdClass();
         $bestelmenu->broden = BroodDAO::getByBestelRegelId(null);
         $bestelmenu->beleg = BelegDAO::getByBestelRegelId(null);
         return $bestelmenu;
     }
 
     public static function prepAdminPaneel() {
-        $DTO = new \stdClass();
+        $DTO = new stdClass();
         $DTO->broden = BroodDAO::getAll();
         $DTO->beleg = BelegDAO::getAll();
         $DTO->bestellingen = BestellingDAO::getAll();
@@ -51,10 +51,10 @@ class ApplicatieService {
     /**
      * 
      * @param type $userid
-     * @return \stdClass
+     * @return stdClass
      */
     public static function haalBestellingOp($userid) {
-        $bestelmenu = new \stdClass();
+        $bestelmenu = new stdClass();
         $bestelmenu->huidigeBestelling = new huidigeBestelling($userid);
         $bestelregels = BestelregelDAO::getByUserId($userid);
         $broden = BroodDAO::getAll();
@@ -80,12 +80,13 @@ class ApplicatieService {
         return $bestelmenu;
     }
 
-    public static function rondBestellingAf($bestelmenu) {
-        $userid = $bestelmenu->huidigeBestelling->getUserid();
-        $bestelling = BestellingDAO::getByUserId($userid);
-        $stmt = BestellingDAO::insert($userid);
+    public static function rondBestellingAf($winkelmand) {
+        
+        $userid = $winkelmand->userid;
+        
+         BestellingDAO::insert($userid);
         $bestellingid = BestellingDAO::getLastInsertId();
-        foreach ($bestelmenu->huidigeBestelling->bestelling as $bestelregel) {
+        foreach ($winkelmand->bestelregels as $bestelregel) {
             $keys = array_keys($bestelregel);
             $result = BestelregelDAO::insert($bestellingid, $bestelregel['prijs']);
             $bestelregelid = BestelregelDAO::getLastInsertId();

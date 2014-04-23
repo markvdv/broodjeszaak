@@ -26,10 +26,11 @@ $loader = new Twig_Loader_Filesystem("src/VDAB/MijnProject/presentation");
 $twig = new Twig_Environment($loader, array("debug" => true));
 $twig->addExtension(new Twig_Extension_Debug); // </editor-fold>
 
+
 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true&&(!isset($_GET['action']))) {
     $username = $_SESSION['username'];
     $userid = $_SESSION['userid'];
-    $bestelmenu = ApplicatieService::prepBestelMenu($userid);
+    $bestelmenu = ApplicatieService::prepBestelMenu();
     $_SESSION['bestelmenu']=serialize($bestelmenu);
     $winkelmand=new huidigeBestelling($userid);
      $_SESSION['winkelmand']= serialize($winkelmand);
@@ -41,6 +42,9 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true&&(!isset($_GET
 
 // <editor-fold defaultstate="collapsed" desc="$_GET['action'] handler">
 if (isset($_GET['action'])) {
+     $winkelmand=unserialize($_SESSION['winkelmand']);
+      $bestelmenu=unserialize($_SESSION['bestelmenu']);
+                $totaalprijs=$winkelmand->berekenTotaalPrijs();
     switch ($_GET['action']) {
         case 'login':
             try {
@@ -100,11 +104,10 @@ if (isset($_GET['action'])) {
             break;
         case 'voegtoe':
             try {
-                $winkelmand=unserialize($_SESSION['winkelmand']);
                 $winkelmand->voegBroodjeToe($_POST['brood'],$_POST['beleg']);
                 $_SESSION['winkelmand']=serialize($winkelmand);
-                $bestelmenu=unserialize($_SESSION['bestelmenu']);
-                $view= $twig->render("bestelmenu.twig",array("bestelmenu"=>$bestelmenu,"winkelmand"=>$winkelmand));
+               
+                $view= $twig->render("bestelmenu.twig",array("bestelmenu"=>$bestelmenu,"winkelmand"=>$winkelmand,'totaalprijs'=>$totaalprijs));
             } catch (NoBreadGivenException $NBGe) {
                 header('location:usercontroller.php?error=GeenBrood');
             } catch (NoFillingGivenException $NBGe) {
@@ -112,13 +115,15 @@ if (isset($_GET['action'])) {
             }
             break;
         case 'bestel':
-            ApplicatieService::rondBestellingAf($bestelmenu);
-            unset($_SESSION['bestelmenu']);
+            
+            ApplicatieService::rondBestellingAf($winkelmand);
+            unset($_SESSION['winkelmand']);
             header('location:usercontroller.php?action=bestellingafgerond');
             break;
         case 'delete':
-            $bestelmenu = $bestelmenu->huidigeBestelling->verwijderBestelregel($_GET['id'], $bestelmenu);
-            $_SESSION['bestelmenu'] = serialize($bestelmenu);
+            $winkelmand->verwijderBestelregel($_GET['id']);
+            $_SESSION['winkelmand']=serialize($winkelmand);
+             $view= $twig->render("bestelmenu.twig",array("bestelmenu"=>$bestelmenu,"winkelmand"=>$winkelmand,'totaalprijs'=>$totaalprijs));
             break;
         case 'bestellingafgerond':
             $bestellingAfgerond=true;

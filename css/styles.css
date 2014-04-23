@@ -32,8 +32,8 @@ header{
     margin-bottom:1em;
 }
 footer{
-    position:absolute;
- top:90vh;
+    //position:absolute;
+ //top:90vh;
  width:97.5%;
     //margin-top:1em;
    padding:1em;

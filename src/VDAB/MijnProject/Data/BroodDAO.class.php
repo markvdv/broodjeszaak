@@ -2,6 +2,8 @@
 
 namespace VDAB\MijnProject\Data;
 
+use PDO;
+use VDAB\MijnProject\Entities\Bestelling;
 use VDAB\MijnProject\Entities\Bestelregel;
 use VDAB\MijnProject\Entities\Brood;
 
@@ -10,7 +12,7 @@ class BroodDAO extends DAO {
     public static function getAll() {
         $sql = "SELECT * FROM brood inner join bestelregel on bestelregel.bestelregelid=brood.bestelregelid";
         $stmt = parent::execPreppedStmt($sql);
-        $resultSet = $stmt->fetchall(\PDO::FETCH_ASSOC);
+        $resultSet = $stmt->fetchall(PDO::FETCH_ASSOC);
         $arr = array();
         foreach ($resultSet as $result) {
             $bestelregel = Bestelregel::create($result['bestelregelid'], $result['bestelregelprijs'], $result['bestellingid']);
@@ -32,7 +34,7 @@ class BroodDAO extends DAO {
             $args=func_get_args();
             $stmt = parent::execPreppedStmt($sql, $args);
         }
-        $resultSet = $stmt->fetchall(\PDO::FETCH_ASSOC);
+        $resultSet = $stmt->fetchall(PDO::FETCH_ASSOC);
         $arr = array();
         foreach ($resultSet as $result) {
             if ($bestelregelid == null) {
@@ -58,9 +60,9 @@ class BroodDAO extends DAO {
         $stmt = parent::execPreppedStmt($sql, $args);
         $result = $stmt->fetch();
         if ($result) {
-            $bestelling = Brood::create($result['broodid'], $result['userid'], $result['tijdstip']);
+            $brood = Brood::create($result['broodid'], $result['type'], $result['prijs']);
         }
-        return $bestelling;
+        return $brood;
     }
 
     /*     * getByUserId
