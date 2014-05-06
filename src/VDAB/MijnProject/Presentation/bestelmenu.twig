@@ -5,7 +5,7 @@ Maak uw bestelling
 {%endblock %}
 {% block content %}
 
-{% if tijdstip < 10 %}
+{% if tijdstip < 10 and bestellingafgerond!=true %}
 <!-- eigenlijke bestelmenu -->
 <form class="bestelmenu" action="usercontroller.php?action=voegtoe" method="POST">
     <select name="brood" size="5">
@@ -22,21 +22,21 @@ Maak uw bestelling
     </select>  
     <input class="voegtoe" name="submit" type="submit" value="voeg toe"> 
 </form>
-<a href="usercontroller.php?action=bestel"><button>rond bestelling af</button></a>
-        {%else%}
+
+        {%elseif tijdstip >10 %}
 <h1>Winkel Dicht</h1>   
 <p>Het is na 10 uur. Er worden geen bestellingen meer opgenomen</p>
 {% endif %}
 <!-- bestelling -->
-{% if bestellingafgerond != 'true'%}
-<p>Uw bestelling werd succesvol geregistreerd</p>
+{% if bestellingafgerond == 'true'%}
+<p>Uw bestelling werd succesvol geregistreerd!</p>
 {%endif %}
 {% if winkelmand is defined %}
 <h1>Uw bestelling</h1>
 
 <table border="1" collapse="collapse">
     <thead>
-        <tr><td>brood</td><td>beleg</td><td>prijs</td><td>verwijderregel</td></tr>
+        <tr><td>Brood</td><td>Beleg</td><td>Prijs</td>{% if bestellingafgerond != 'true'%}<td>Annuleer Broodje</td> {%endif%}</tr>
     </thead>
                     {% for key,bestelregel in winkelmand.bestelregels %}
     <tr>
@@ -48,18 +48,18 @@ Maak uw bestelling
             {{bestelregel.beleg}}
         </td>
         <td>
-           &euro; {{bestelregel.prijs/100}}
+            &euro; {{bestelregel.prijs/100}}
         </td>
-        {% if bestellingafgerond != 'true'%}
-        <td><a href="usercontroller.php?action=delete&id={{key}}">X</a></td>
+{% if bestellingafgerond != 'true'%}
+        <td><a href="usercontroller.php?action=delete&id={{key}}"><div class="delete"><img src="img/delete.png"></div></a></td>
         {%endif%}
                     {% endfor %}
-        
+
         <!-- prijs echoen -->
     <tr>
-        <td></td><td>TOTAALPRIJS</td><td>&euro; {{totaalprijs/100}}</td>
+        <td></td><td>TOTAALPRIJS</td><td>&euro; {{totaalprijs/100}}</td>{% if bestellingafgerond != 'true'%}<td><a class="afronder" href="usercontroller.php?action=bestel">plaats bestelling</a></td> {%endif%}
     </tr>
-    </tr>
+</tr>
 </table>
         {%endif%}
         {% if error is defined %}
@@ -69,4 +69,5 @@ Maak uw bestelling
 <p>U heeft geen beleg gekozen</p>
             {% endif %}
         {% endif %}
+<a class="loguit" href="usercontroller.php?action=loguit">Log uit</a>
 {%endblock%}

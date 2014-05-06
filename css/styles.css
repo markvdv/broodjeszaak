@@ -16,7 +16,9 @@ ul{list-style:none;}
 body{
     position:relative;
     font-family: Arial,Helvetica,sans-serif;
-    background-color:whitesmoke;
+    background:whitesmoke url(../img/bg.jpg) no-repeat fixed center;
+    background-size:110%;
+    color:white;
 }
 .bold{
     font-weight:bold;
@@ -32,11 +34,11 @@ header{
     margin-bottom:1em;
 }
 footer{
-    //position:absolute;
- //top:90vh;
- width:97.5%;
-    //margin-top:1em;
-   padding:1em;
+    //position:fixed;
+    //top:90vh;
+    width:97.5%;
+    margin-top:1em;
+    padding:1em;
 }
 .bar{
     width:140%;
@@ -62,6 +64,7 @@ button {
 table{
     width:100%;
     border-collapse: collapse;
+    border:1px solid white;
 }
 td{
     width:100%;
@@ -86,4 +89,42 @@ thead td{
 .bestelmenu input[type=submit]{
     margin-top:0.15em;
     height:6.2em;
+}
+.delete{
+    width:1em;
+}
+td{
+    background:#e6e6e6;  
+    color:#666666
+}
+td:nth-of-type(4){
+    background:grey;
+}
+td:nth-of-type(4) div{
+    margin:0 auto;
+}
+.delete img{
+    width:100%;
+}
+a{
+    color:white;
+    text-decoration:none;
+    background:url(../img/delete.png);
+    background-size:200%;
+}
+.loguit{
+    background:grey;
+    padding:0.25em;
+    border:1px outset whitesmoke;
+    margin:1.5em;
+}
+.afronder{
+    margin:0 auto;
+    background:grey;
+    color:white;
+    border:1px outset whitesmoke;
+}
+.afronder button{
+    width:5em;
+
 }
