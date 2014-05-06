@@ -52,8 +52,6 @@ if (!isset($_SESSION['adminloggedin']) || $_SESSION['adminloggedin'] != true) {
     exit(0);
 }
 $DTO = ApplicatieService::prepAdminPaneel();
-$view = $twig->render('header.twig');
-$view .= $twig->render('adminpaneel.twig', array('bestellingen' => $DTO->bestellingen, 'bestelregels' => $DTO->bestelregels, 'users' => $DTO->users, 'broden' => $DTO->broden, 'beleg' => $DTO->beleg, 'totaalprijs' => $DTO->totaalprijs));
-$view .= $twig->render("footer.twig");
+$view = $twig->render('adminpaneel.twig', array('bestellingen' => $DTO->bestellingen, 'bestelregels' => $DTO->bestelregels, 'users' => $DTO->users, 'broden' => $DTO->broden, 'beleg' => $DTO->beleg, 'totaalprijs' => $DTO->totaalprijs));
 echo $view;
 exit(0);

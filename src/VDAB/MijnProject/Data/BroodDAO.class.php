@@ -67,7 +67,7 @@ class BroodDAO extends DAO {
 
     
       public function getByType($broodType) {
-        $sql = "SELECT * FROM brood where type=?";
+        $sql = "SELECT * FROM brood where type=? and bestelregelid IS NULL";
         $args = func_get_args();
         $stmt = parent::execPreppedStmt($sql, $args);
         $result = $stmt->fetch();

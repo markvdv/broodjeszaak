@@ -28,6 +28,9 @@ Maak uw bestelling
 <p>Het is na 10 uur. Er worden geen bestellingen meer opgenomen</p>
 {% endif %}
 <!-- bestelling -->
+{% if bestellingafgerond != 'true'%}
+<p>Uw bestelling werd succesvol geregistreerd</p>
+{%endif %}
 {% if winkelmand is defined %}
 <h1>Uw bestelling</h1>
 
@@ -47,7 +50,9 @@ Maak uw bestelling
         <td>
            &euro; {{bestelregel.prijs/100}}
         </td>
+        {% if bestellingafgerond != 'true'%}
         <td><a href="usercontroller.php?action=delete&id={{key}}">X</a></td>
+        {%endif%}
                     {% endfor %}
         
         <!-- prijs echoen -->

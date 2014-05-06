@@ -81,24 +81,19 @@ class ApplicatieService {
     }
 
     public static function rondBestellingAf($winkelmand) {
-        $userid = $winkelmand->userid;
+        $userid = $winkelmand->getUserid();
         BestellingDAO::insert($userid);
         $bestellingid = BestellingDAO::getLastInsertId();
-        foreach ($winkelmand->bestelregels as $bestelregel) {
-           $brood= BroodDAO::getBroodByType($bestelregel->brood);
-            $keys = array_keys($bestelregel);
+        foreach ($winkelmand->getBestelregels() as $bestelregel) {
             $result = BestelregelDAO::insert($bestellingid, $bestelregel['prijs']);
             $bestelregelid = BestelregelDAO::getLastInsertId();
-            foreach ($bestelmenu->broden as $brood) {
-                if ($brood->getType() == $keys[0]) {
-                    BroodDAO::insert($brood->getType(), $brood->getPrijs(), $bestelregelid);
-                }
-            }
-            foreach ($bestelregel[$keys[0]] as $belegitem) {
-                foreach ($bestelmenu->beleg as $beleg) {
-                    if ($beleg->getType() == $belegitem) {
-                        BelegDAO::insert($beleg->getType(), $beleg->getPrijs(), $bestelregelid);
-                    }
+            $brood = BroodDAO::getByType($bestelregel['brood']);
+            BroodDAO::insert($brood->getType(), $brood->getPrijs(), $bestelregelid);
+            $aBeleg = explode(",", $bestelregel['beleg']);
+            foreach ($aBeleg as $belegType) {
+                if ($belegType !== '') {
+                    $beleg = BelegDAO::getByType($belegType);
+                    BelegDAO::insert($beleg->getType(), $beleg->getPrijs(), $bestelregelid);
                 }
             }
         }

@@ -16,7 +16,7 @@ class BelegDAO extends DAO {
         $arr = array();
         foreach ($resultSet as $result) {
             $bestelregel = Bestelregel::create($result['bestelregelid'], $result['bestelregelprijs'], $result['bestellingid']);
-            $beleg =  Beleg::create($result['belegid'], $result['type'], $result['prijs'], $bestelregel);
+            $beleg = Beleg::create($result['belegid'], $result['type'], $result['prijs'], $bestelregel);
             $arr[] = $beleg;
         }
         return $arr;
@@ -50,8 +50,9 @@ class BelegDAO extends DAO {
         $args = func_get_args();
         parent::execPreppedStmt($sql, $args);
     }
+
     public static function getById($belegid) {
-         $sql = "SELECT * FROM beleg where belegid=?";
+        $sql = "SELECT * FROM beleg where belegid=?";
         $args = func_get_args();
         $stmt = parent::execPreppedStmt($sql, $args);
         $result = $stmt->fetch();
@@ -60,14 +61,16 @@ class BelegDAO extends DAO {
         }
         return $beleg;
     }
-  public static function getByType($belegType) {
-         $sql = "SELECT * FROM beleg where type=?";
+
+    public static function getByType($belegType) {
+        $sql = "SELECT * FROM beleg WHERE type=? AND bestelregelid IS NULL";
         $args = func_get_args();
         $stmt = parent::execPreppedStmt($sql, $args);
         $result = $stmt->fetch();
         if ($result) {
             $beleg = Beleg::create($result['belegid'], $result['type'], $result['prijs']);
+            return $beleg;
         }
-        return $beleg;
     }
+
 }
