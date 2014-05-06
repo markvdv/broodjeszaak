@@ -1,7 +1,9 @@
 {# empty Twig template #}
+{%extends 'base.twig'%}
+{%block content%}
 <h1>Te Leveren Bestellingen</h1>
 {% for bestelling  in bestellingen %}
-<table border='1'>
+<table class="overzicht" border='1'>
     <thead>
         <tr>
             <td>
@@ -24,10 +26,10 @@
                 tijdstip: {{bestelling.tijdstip}}
             </td>
             <td>
-                prijs
+                <a  href="admincontroller.php?action=verwijderbestelling&id={{bestelling.id}}"><div class="delete"><img src="img/delete.png"></div></a><br>
+            Prijs
             </td>
-            <td><a href="admincontroller.php?action=verwijderbestelling&id={{bestelling.id}}">X</a></td>
-        </tr>
+           
     </thead>
     {% for bestelregel in bestelregels %}
     <tr >
@@ -47,7 +49,7 @@
             
             {% endfor %}
         </td>
-             <td colspan="2">
+             <td class="centerText" colspan="2">
             &euro; {{bestelregel.prijs/100}}
         </td>
             {% endif %}
@@ -58,7 +60,7 @@
     
 {% for key, prijs  in totaalprijs %}
    {% if key== bestelling.id %}
-    <tr><td class='bold'>totaalprijs</td><td colspan="2">
+    <tr><td class='bold'>Totaalprijs</td><td class="bold centerText" colspan="2">
             &euro; {{prijs/100}}
         </td></tr>
     {% endif %}
@@ -66,3 +68,4 @@
 </table>
 {% endfor %}
 <a href="usercontroller.php?action=loguit"><button>loguit</button></a>
+{%endblock%}

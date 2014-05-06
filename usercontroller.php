@@ -77,7 +77,6 @@ if (isset($_GET['action'])) {
             break;
         case 'nieuweUser';
             $view = $twig->render("registreerformulier.twig");
-            exit(0);
             break;
         case 'registreerUser':
             try {

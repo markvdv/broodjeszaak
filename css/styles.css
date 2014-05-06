@@ -30,6 +30,7 @@ header,footer{
 }
 
 header{
+    padding:0.5em;
     margin-top:1vh;
     margin-bottom:1em;
 }
@@ -109,8 +110,6 @@ td:nth-of-type(4) div{
 a{
     color:white;
     text-decoration:none;
-    background:url(../img/delete.png);
-    background-size:200%;
 }
 .loguit{
     background:grey;
@@ -128,3 +127,9 @@ a{
     width:5em;
 
 }
+table{
+    margin-top:1em;
+}
+.centerText{
+    text-align:center;
+}    
