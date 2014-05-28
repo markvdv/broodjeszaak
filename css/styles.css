@@ -16,7 +16,7 @@ ul{list-style:none;}
 body{
     position:relative;
     font-family: Arial,Helvetica,sans-serif;
-    background:whitesmoke url(../img/bg.jpg) no-repeat fixed center;
+    background:whitesmoke url(../img/bg.jpg) no-repeat local center;
     background-size:110%;
     color:white;
 }
@@ -50,13 +50,18 @@ form{
     position:relative;
 }
 form *{
-    width:32.5%;
+    width:33%;
+    border:none;
 }
 form input[type=submit]{
-    width:33%;
-}
-button {
     width:32.9%;
+    //margin-left:1px;
+}
+button,form input[type=submit] {
+    width:32.9%;
+   background-color: #808080;
+   color:whitesmoke;
+   border:none;
 }
 .voegtoe{
     height:5em;
